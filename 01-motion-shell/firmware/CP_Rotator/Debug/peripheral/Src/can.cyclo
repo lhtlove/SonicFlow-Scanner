@@ -1,0 +1,12 @@
+../peripheral/Src/can.cpp:9:6:void prompt(uint8_t*, uint8_t)	1
+../peripheral/Src/can.cpp:72:6:void CAN_INIT(uint16_t, uint16_t)	1
+../peripheral/Src/can.cpp:95:6:void CAN_Tx(uint8_t*, uint8_t, uint16_t)	1
+../peripheral/Src/can.cpp:47:6:void rotator(uint8_t*, uint8_t)	6
+../peripheral/Src/can.cpp:109:6:void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef*)	4
+../peripheral/Src/can.cpp:123:6:void send_int32(int32_t, uint8_t*)	1
+../peripheral/Src/can.cpp:130:6:void send_int16(int16_t, uint8_t*)	1
+../peripheral/Src/can.cpp:135:6:void packFloat(float, uint8_t*)	1
+../peripheral/Src/can.cpp:141:9:int32_t receive_int32(uint8_t*)	1
+../peripheral/Src/can.cpp:17:6:void motor(uint8_t*, uint8_t)	12
+../peripheral/Src/can.cpp:148:9:int16_t receive_int16(uint8_t*)	1
+../peripheral/Src/can.cpp:153:7:float unpackFloat(const uint8_t*)	1

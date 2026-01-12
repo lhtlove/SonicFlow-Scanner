@@ -1,0 +1,7 @@
+../peripheral/Src/motors.cpp:15:6:void Stepper_Init(TIM_HandleTypeDef*)	1
+../peripheral/Src/motors.cpp:40:9:uint8_t Stepper_Move(int32_t)	2
+../peripheral/Src/motors.cpp:72:6:void Stepper_TIM_Interrupt()	10
+../peripheral/Src/motors.cpp:65:6:void Stepper_Stop()	1
+../peripheral/Src/motors.cpp:126:6:void Stepper_Enable(uint8_t)	1
+../peripheral/Src/motors.cpp:133:6:void Stepper_Reset()	2
+../peripheral/Src/motors.cpp:139:6:void Stepper_SetSpeed(uint32_t)	3
