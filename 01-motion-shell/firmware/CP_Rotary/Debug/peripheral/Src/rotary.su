@@ -1,6 +1,0 @@
-../peripheral/Src/rotary.cpp:14:6:void home()	16	static
-../peripheral/Src/rotary.cpp:36:7:float rotary_move(float)	8	static
-../peripheral/Src/rotary.cpp:45:6:void Stepper2_Move(int32_t)	16	static
-../peripheral/Src/rotary.cpp:53:8:void Stepper2_Stop()	16	static
-../peripheral/Src/rotary.cpp:59:8:void Stepper2_SetSpeed(uint16_t)	16	static
-../peripheral/Src/rotary.cpp:66:8:void Stepper2_Enable(uint8_t)	16	static
