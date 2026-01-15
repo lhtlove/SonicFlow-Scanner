@@ -65,7 +65,7 @@ By measuring time-of-flight between known positions across multiple angles, the 
 | **Sensor Module** | High-frequency ultrasonic transceiver | 300kHz DDS-based, phase-accurate ToF measurement |
 
 ### Motion Shell
-
+![IMG_0400](https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9)
 <p align="center">
   <img src="docs/images/motion-shell-assembled.jpg" alt="Motion Shell" width="600">
 </p>
