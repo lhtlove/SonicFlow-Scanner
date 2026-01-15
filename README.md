@@ -7,6 +7,9 @@ A modular scanning system that creates 3D thermal distribution maps and performs
 ![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
+> **📄 [View Comprehensive Project Overview](https://docs.google.com/document/d/1DoINSkOtGRSBR8vOlWFI2wLNMxFoE6zbKSt7RHld4zc/edit?usp=sharing)**
+> Detailed documentation covering design decisions, technical challenges, and development process.
+
 ---
 
 ## The Vision
