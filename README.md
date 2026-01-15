@@ -5,7 +5,7 @@
 A modular scanning system that creates 3D thermal distribution maps and performs geometry scanning using ultrasonic measurement principles adapted from computed tomography (CT). Designed to bring comprehensive environmental feedback to 3D printing—enabling a make-check-change workflow rather than blind fabrication.
 
 ![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
-![License](https://img.shields.io/badge/license-MIT-blue)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
 ---
 
@@ -266,7 +266,16 @@ The core concept emerged from recognizing that a traditional sensor weakness (te
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License** (CC BY-NC-ND 4.0).
+
+**What this means:**
+- ✅ **You CAN:** Share and redistribute this project with proper attribution
+- ❌ **You CANNOT:** Use this project or its designs for commercial purposes
+- ❌ **You CANNOT:** Create modified or derivative versions for distribution
+
+This license protects the 3D models, hardware designs, and other creative works from commercial exploitation while allowing the community to learn from and reference the work.
+
+See the [LICENSE](LICENSE) file for full legal details.
 
 ---
 
