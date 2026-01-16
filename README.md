@@ -61,6 +61,9 @@ By measuring time-of-flight between known positions across multiple angles, the 
 
 ### Three Core Components
 
+> **🔧 [View Interactive 3D Assembly](https://a360.co/4szlqWj)**
+> Explore the full system design in 3D (Autodesk Viewer)
+
 | Component | Description | Key Specs |
 |-----------|-------------|-----------|
 | **Motion Shell** | Ring-shaped mechanical framework | 444mm OD, continuous 360° rotation, 90° tilt capability |
