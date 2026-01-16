@@ -9,6 +9,9 @@ A modular scanning system that creates 3D thermal distribution maps and performs
 
 > **📄 [View Comprehensive Project Overview](https://docs.google.com/document/d/1DoINSkOtGRSBR8vOlWFI2wLNMxFoE6zbKSt7RHld4zc/edit?usp=sharing)**
 > Detailed documentation covering design decisions, technical challenges, and development process.
+>
+> **🔧 [View Interactive 3D Assembly](https://a360.co/4szlqWj)**
+> Explore the full system design in 3D (Autodesk Viewer)
 
 ---
 
@@ -60,9 +63,6 @@ By measuring time-of-flight between known positions across multiple angles, the 
 ## System Architecture
 
 ### Three Core Components
-
-> **🔧 [View Interactive 3D Assembly](https://a360.co/4szlqWj)**
-> Explore the full system design in 3D (Autodesk Viewer)
 
 | Component | Description | Key Specs |
 |-----------|-------------|-----------|
