@@ -4,7 +4,7 @@
 
 After deciding the basis of sensor control and positioning, it became clear that this had to be under the modular format. Each measuring unit had to move independently inside the dedicated rail or track, allowing them to install themselves anywhere inside the rail.
 
-![earlier_design_labeled](images/earlier_design_labeled.png)
+![earlier_design_labeled](docs/images/s1.png)
 
 So the earlier version of this shell was made to meet the requirements. The overall intention of the design didn't differ too much compared to the modern one. The main shell rotates infinitely on the dedicated circular rail, providing speed and robustness, and each sensor unit moves inside the shell to precisely position and orient sensors. The disparity was that it had separate sectors of inner rails, and the motors to move the shell were located inside the shell, between two sectors.
 
