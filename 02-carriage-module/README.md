@@ -24,7 +24,7 @@ Something that met most of these requirements was geared DC motors combined with
 
 | Early Prototyping | Component Testing |
 |:--:|:--:|
-| ![Early prototype](../04-docs/images/c-1.jpg) | ![Testing](../04-docs/images/c-2.jpg) |
+| ![Early prototype](../04-docs/images/m-1.jpg) | ![Early prototype](../04-docs/images/m-2.jpg) |
 
 ### Component Arrangement
 
