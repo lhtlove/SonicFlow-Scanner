@@ -71,10 +71,15 @@ By measuring time-of-flight between known positions across multiple angles, the 
 | **Sensor Module** | High-frequency ultrasonic transceiver | 300kHz DDS-based, phase-accurate ToF measurement |
 
 ### Motion Shell
-![IMG_0400](https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9)
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9" alt="Motion Shell" width="600">
-</p>
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9" alt="Motion Shell" width="600"><br>
+      <b>Motion Shell Assembly</b>
+    </td>
+  </tr>
+</table>
 
 - Fully connected carriage rails with integrated gear tracks
 - Custom ENIG-plated PCB slip rings for continuous power and CAN bus during infinite rotation
@@ -84,9 +89,14 @@ By measuring time-of-flight between known positions across multiple angles, the 
 
 ### Carriage Module
 
-<p align="center">
-  <img src="docs/images/carriage-module-exploded.jpg" alt="Carriage Module Exploded View" width="500">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/carriage-module-exploded.jpg" alt="Carriage Module Exploded View" width="500"><br>
+      <b>Carriage Module Exploded View</b>
+    </td>
+  </tr>
+</table>
 
 - NEMA8 stepper for linear rail positioning
 - Two N20 geared DC motors with magnetic encoders for dual-axis sensor orientation
@@ -96,9 +106,14 @@ By measuring time-of-flight between known positions across multiple angles, the 
 
 ### Sensor Module
 
-<p align="center">
-  <img src="docs/images/sensor-board.jpg" alt="Sensor Board" width="400">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/sensor-board.jpg" alt="Sensor Board" width="400"><br>
+      <b>Sensor Board</b>
+    </td>
+  </tr>
+</table>
 
 - 300kHz operation (research-grade frequency range)
 - AD9837 DDS for precise waveform generation
