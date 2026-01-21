@@ -130,9 +130,9 @@ This hardly came to a practical design, but after testing some ideas, the pinnin
 
 This simultaneously solved the shifting issue and the interference with the main body. With small extensions on both sides after homing, it worked perfectly without touching anything.
 
-| Completed Module With A Mock-Up Housing |
-|:--:|
-| ![Completed module](../04-docs/images/m-6.png) |
+| Completed Module With A Mock-Up Housing | Completed Prototype |
+|:--:|:--:|
+| ![Completed module](../04-docs/images/m-6.png) | ![Completed prototype](../04-docs/images/m-7.jpeg) |
 
 Through this demanding process, the module became complete with the functions I imagined in initial designs.
 
