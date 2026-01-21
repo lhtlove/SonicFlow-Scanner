@@ -22,9 +22,9 @@ Stepper motors always seem to be the ideal choice, but I had to be aware that I 
 
 Something that met most of these requirements was geared DC motors combined with encoders. I was largely concerned about their lack of precision and controllability but still decided to give it a try.
 
-| Early Prototyping | Component Testing |
+| Early Prototyping |
 |:--:|:--:|
-| ![Early prototype](../04-docs/images/m-1.jpg) | ![Early prototype](../04-docs/images/m-2.jpg) |
+| ![Early prototype](../04-docs/images/m-1.jpeg) | ![Early prototype](../04-docs/images/m-2.jpeg) |
 
 ### Component Arrangement
 
