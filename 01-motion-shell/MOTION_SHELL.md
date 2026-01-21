@@ -4,11 +4,13 @@
 
 After deciding the basis of sensor control and positioning, it became clear that this had to be under the modular format. Each measuring unit had to move independently inside the dedicated rail or track, allowing them to install themselves anywhere inside the rail.
 
-![earlier_design_labeled](../04-docs/images/s1.png)
+![earlier_design_labeled](../04-docs/images/s-1.png)
+![earlier_design_labeled](../04-docs/images/s-2.png)
+
 
 So the earlier version of this shell was made to meet the requirements. The overall intention of the design didn't differ too much compared to the modern one. The main shell rotates infinitely on the dedicated circular rail, providing speed and robustness, and each sensor unit moves inside the shell to precisely position and orient sensors. The disparity was that it had separate sectors of inner rails, and the motors to move the shell were located inside the shell, between two sectors.
 
-![earlier_design_photo](images/earlier_design_photo.jpg)
+![earlier_design_labeled](../04-docs/images/s-3.png)
 
 I was aware that a sensor carriage unit's positioning capability would be inside -60 to 60 degrees, so a fully connected rail wouldn't help that much in measurement but only add complexity of homing each module, as there would be no limit without blockades. Also, it was clear that this kind of sensor positioning only enables measurement on the XY plane. It can't see anything that can be observed from different angles. So I thought that fully rotating the external motion axis would make it possible to measure proximity from tilted angles. So I didn't see much of a problem at that point.
 
@@ -16,7 +18,7 @@ However, as some testing happened, the design revealed plenty of limitations. Fi
 
 So I had to think of an improved design that simultaneously solves the tilting capability and the difficulty of replacements.
 
-![modern_foldable_design](images/modern_foldable_design.png)
+![earlier_design_labeled](../04-docs/images/s-4.png)
 
 What I eventually came up with was about folding the half of the shell, and removing the division of sectors. The motors that power the shell rotation are externalized for this reason. Now the modules can move infinitely inside the shell, and the shell itself can fold from 0 to 90 degrees. When it's 0, it operates as intended: modules move freely, and orient sensors at required locations. When I need measurement from the top, or angles other than just on the XY plane, some sensors can move to the folding side of the shell, and then it can tilt to the needed angle. If I have to replace, remove, or insert modules, the shell can be tilted to 90 degrees and they can be easily removed from the rigid side of the shell. The module homing is still possible: simply put modules on the folding side, tilt to 90 degrees, and move the modules to the end of each side. The rigid side's ceiling makes a proper blockade, a reference for homing. The concerns around collisions on full tilt were fully resolved too. Now it only has to beware of components above (e.g., printer heads) the shell.
 
