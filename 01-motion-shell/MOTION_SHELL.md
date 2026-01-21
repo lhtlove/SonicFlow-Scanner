@@ -10,7 +10,7 @@ After deciding the basis of sensor control and positioning, it became clear that
 
 So the earlier version of this shell was made to meet the requirements. The overall intention of the design didn't differ too much compared to the modern one. The main shell rotates infinitely on the dedicated circular rail, providing speed and robustness, and each sensor unit moves inside the shell to precisely position and orient sensors. The disparity was that it had separate sectors of inner rails, and the motors to move the shell were located inside the shell, between two sectors.
 
-![earlier_design_labeled](../04-docs/images/s-3.png)
+![earlier_design_photo](../04-docs/images/s-3.png)
 
 I was aware that a sensor carriage unit's positioning capability would be inside -60 to 60 degrees, so a fully connected rail wouldn't help that much in measurement but only add complexity of homing each module, as there would be no limit without blockades. Also, it was clear that this kind of sensor positioning only enables measurement on the XY plane. It can't see anything that can be observed from different angles. So I thought that fully rotating the external motion axis would make it possible to measure proximity from tilted angles. So I didn't see much of a problem at that point.
 
@@ -18,7 +18,7 @@ However, as some testing happened, the design revealed plenty of limitations. Fi
 
 So I had to think of an improved design that simultaneously solves the tilting capability and the difficulty of replacements.
 
-![earlier_design_labeled](../04-docs/images/s-4.png)
+![modern_foldable_design](../04-docs/images/s-4.png)
 
 What I eventually came up with was about folding the half of the shell, and removing the division of sectors. The motors that power the shell rotation are externalized for this reason. Now the modules can move infinitely inside the shell, and the shell itself can fold from 0 to 90 degrees. When it's 0, it operates as intended: modules move freely, and orient sensors at required locations. When I need measurement from the top, or angles other than just on the XY plane, some sensors can move to the folding side of the shell, and then it can tilt to the needed angle. If I have to replace, remove, or insert modules, the shell can be tilted to 90 degrees and they can be easily removed from the rigid side of the shell. The module homing is still possible: simply put modules on the folding side, tilt to 90 degrees, and move the modules to the end of each side. The rigid side's ceiling makes a proper blockade, a reference for homing. The concerns around collisions on full tilt were fully resolved too. Now it only has to beware of components above (e.g., printer heads) the shell.
 
@@ -30,53 +30,50 @@ With this improvement, the critical problems were all resolved and made an excel
 
 All of the designed parts other than off-the-shelf components like steppers and fasteners are 3D printed with an FDM printer, PLA + carbon fiber mixed material.
 
-![exploded_overview](images/exploded_overview.png)
+![exploded_overview](../04-docs/images/s10.png)
 
-![bearing_based_traveling_units](images/bearing_based_traveling_units.png)
+![bearing_based_traveling_units](../04-docs/images/s1.png)
 
-![rail_system_slip_ring](images/rail_system_slip_ring.png)
+![rail_system_slip_ring](../04-docs/images/s2.png)
 
-![slip_ring_contacts](images/slip_ring_contacts.png)
-
-![slip_ring_ball_pins](images/slip_ring_ball_pins.png)
+![slip_ring_contacts with spring loaded ball pins](../04-docs/images/s3.png)
 
 ### Tilting System
 
-![tilting_system_internals](images/tilting_system_internals.png)
+![tilting_system_internals](../04-docs/images/s4.png)
+![tilting_system_internals](../04-docs/images/s5.png)
+![tilting_system_internals](../04-docs/images/s11.jpeg)
 
 - 1:3 reduction spur gears, 1:1 bevel gears, 1:4 reduction planetary gears, total 1:12 reduction
 - 20mm NEMA 17
 - Custom controller board
 
-![heat_dissipation_planetary](images/heat_dissipation_planetary.png)
-
-![heat_dissipation_photo](images/heat_dissipation_photo.jpg)
+![heat_dissipation_design](../04-docs/images/s6.png)
 
 ### Rotation System
 
-![rotation_system_overview](images/rotation_system_overview.png)
+![rotation_system_overview](../04-docs/images/s7.png)
 
-![external_motion_axis_1](images/external_motion_axis_1.png)
+![inside_motion_axis](../04-docs/images/s8.png)
 
-![external_motion_axis_2](images/external_motion_axis_2.png)
 
 - Same controller boards are used
 - 360:31 reduction total
 - Z-axis shaft bushings and screw nuts
 - A physical homing switch is installed
-
-![homing_frame](images/homing_frame.png)
+- 
+![homing structure](../04-docs/images/s9.png)
 
 - Rotational indicators of the tilting system click the switch to indicate positions
 - The frame structure ensures click loss doesn't happen
 
-![assembled_top_view](images/assembled_top_view.jpg)
+![external wiring overview](../04-docs/images/s12.jpeg)
 
 ---
 
 ## Circuit Specifications
 
-![controller_pcb](images/controller_pcb.png)
+![controller_pcb](../04-docs/images/mc.png)
 
 ### MCU
 
