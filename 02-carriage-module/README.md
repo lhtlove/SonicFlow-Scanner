@@ -70,11 +70,11 @@ Even at that minimum speed, there were always plenty of additional counts after 
 
 With these limitations, the initial attempt to make the steering system was unsuccessful. But a few points to address became apparent: fix hardware faults and come up with a method that can operate the DC motors with minimum error.
 
-| Modern Design - Exploded View |
-|:--:|
-| ![Modern exploded view](../04-docs/images/c-3.png) |
-
 ### Hardware Improvements
+
+| General Overview | Structure Overview |
+|:--:|:--:|
+| ![Early prototype](../04-docs/images/m-3.png) | ![Early prototype](../04-docs/images/m-4.png) |
 
 For the hardware, all the gears used for rod-rail parts were replaced with basic spur gears for easier replacement of gears and rods.
 
@@ -102,13 +102,9 @@ Though there might be some room for improvement as I add features to adjust thos
 
 Through tests, the minimum counts to travel turned out to be 12, and overall error when reaching targets turned out to be mostly within ±12 counts. So at worst, the total error caused to the sensor orientation is lower than 1 degree, which is smaller than mechanical limitations of the 3D-printed structure and good enough not to exceed the sensor's ideal directivity.
 
-| Orientation Control Sequence - Top View |
+| Top & Bottom View of Orientation Control Scheme |
 |:--:|
-| ![Orientation control top](../04-docs/images/c-4.png) |
-
-| Orientation Control Sequence - Bottom View |
-|:--:|
-| ![Orientation control bottom](../04-docs/images/c-5.png) |
+| ![Orientation scheme](../04-docs/images/m-5.png) |
 
 ### The Rod Mechanism
 
@@ -134,9 +130,9 @@ This hardly came to a practical design, but after testing some ideas, the pinnin
 
 This simultaneously solved the shifting issue and the interference with the main body. With small extensions on both sides after homing, it worked perfectly without touching anything.
 
-| Completed Module |
+| Completed Module With A Mock-Up Housing |
 |:--:|
-| ![Completed module](../04-docs/images/c-6.png) |
+| ![Completed module](../04-docs/images/m-6.png) |
 
 Through this demanding process, the module became complete with the functions I imagined in initial designs.
 
@@ -150,31 +146,35 @@ But at least, it became suitable to perform the measurements I wanted.
 
 | Exploded Overview |
 |:--:|
-| ![Exploded overview](../04-docs/images/c-7.png) |
+| ![Exploded overview](../04-docs/images/m10.png) |
 
-| Rod Gears Overview - Top | Rod Gears Overview - Internal |
+| Rod Gears Overview - Top | Rod Gears Overview - Bottom |
 |:--:|:--:|
-| ![Rod gears top](../04-docs/images/c-8.png) | ![Rod gears internal](../04-docs/images/c-9.png) |
+| ![Rod gears top](../04-docs/images/m1.png) | ![Rod gears internal](../04-docs/images/m5.png) |
 
 | Heat Dissipation Design |
 |:--:|
-| ![Heat dissipation](../04-docs/images/c-10.png) |
+| ![Heat dissipation](../04-docs/images/m2.png) |
 
 ### Rod Gear System
 
-| Rod Gears Full Structure - Side View | Rod Gears Full Structure - Front View |
+| Rod Gears Full Structure - Side View | Rod Gears Full Structure - Internal View |
 |:--:|:--:|
-| ![Rod gears side](../04-docs/images/c-11.png) | ![Rod gears front](../04-docs/images/c-12.png) |
+| ![Rod gears side](../04-docs/images/m4.png) | ![Rod gears front](../04-docs/images/m3.png) |
 
 | Extension Rail of the Housing |
 |:--:|
-| ![Extension rail](../04-docs/images/c-13.png) |
+| ![Extension rail](../04-docs/images/m11.png) |
 
 ### Orientation Control
 
-| Top & Bottom View of Orientation Control Scheme |
+| Orientation Control Sequence - Top View |
 |:--:|
-| ![Orientation scheme](../04-docs/images/c-14.png) |
+| ![Orientation control top](../04-docs/images/m6.png) |
+
+| Orientation Control Sequence - Bottom View |
+|:--:|
+| ![Orientation control bottom](../04-docs/images/m7.png) |
 
 - Depending on the target direction (θ > 0 vs θ < 0), either side of the rod moves
 - The round pinning structure of the moving rod holds the housing as it moves
@@ -183,23 +183,19 @@ But at least, it became suitable to perform the measurements I wanted.
 
 | Rod Rails | Module Fitting the Shell |
 |:--:|:--:|
-| ![Rod rails](../04-docs/images/c-15.png) | ![Module in shell](../04-docs/images/c-16.png) |
+| ![Rod rails](../04-docs/images/m8.png) | ![Module in shell](../04-docs/images/m9.png) |
 
 ---
 
 ## Circuit Specifications
 
-| Module Controller Circuit Board - Cross Section |
-|:--:|
-| ![Board cross section](../04-docs/images/c-17.png) |
-
 | Controller PCB - Front | Controller PCB - Back |
 |:--:|:--:|
-| ![PCB front](../04-docs/images/c-18.png) | ![PCB back](../04-docs/images/c-19.png) |
+| ![PCB front](../04-docs/images/cc1.png) | ![PCB back](../04-docs/images/cc2.png) |
 
 | Controller PCB - Labeled |
 |:--:|
-| ![PCB labeled](../04-docs/images/c-20.png) |
+| ![PCB labeled](../04-docs/images/cc3.png) |
 
 ### MCU
 
