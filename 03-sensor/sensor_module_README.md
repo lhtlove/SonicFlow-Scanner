@@ -54,7 +54,7 @@ The core sensing concept—transmit, receive, preserve waveform, analyze for pre
 | Drive Voltage | ±22V (bipolar) |
 | ADC Resolution | 12-bit (STM32G4 internal) |
 | Communication | CAN bus (1Mbps) |
-| Input Voltage | 7-30V DC |
+| Input Voltage | 12V DC |
 
 ### Transducer Specifications
 
@@ -64,21 +64,13 @@ The system uses 300kHz ceramic ultrasonic transceivers selected for:
 - **Frequency**: 300kHz provides ~1.1mm wavelength in air, supporting sub-millimeter resolution with phase detection
 - **Dual Function**: Same element serves as both transmitter and receiver (transceiver configuration)
 
-| Transducer Board Overview |
-|:--:|
-| ![Transducer board](../04-docs/images/sf-1.png) |
-
 ---
 
 ## Circuit Specifications
 
 | Sensor Board - Front | Sensor Board - Back |
 |:--:|:--:|
-| ![Board front](../04-docs/images/sf-2.png) | ![Board back](../04-docs/images/sf-3.png) |
-
-| Sensor Board - Labeled |
-|:--:|
-| ![Board labeled](../04-docs/images/sf-4.png) |
+| ![Board front](../04-docs/images/sc1.png) | ![Board back](../04-docs/images/sc2.png) |
 
 ### MCU
 
