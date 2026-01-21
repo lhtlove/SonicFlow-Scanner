@@ -4,7 +4,7 @@
 
 After deciding the basis of sensor control and positioning, it became clear that this had to be under the modular format. Each measuring unit had to move independently inside the dedicated rail or track, allowing them to install themselves anywhere inside the rail.
 
-![earlier_design_labeled](../04-docs/images/s-1.png)
+![earlier_design_labeled](../04-docs/images/s-1.jpg)
 ![earlier_design_labeled](../04-docs/images/s-2.png)
 
 
