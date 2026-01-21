@@ -61,7 +61,7 @@ All of the designed parts other than off-the-shelf components like steppers and 
 - 360:31 reduction total
 - Z-axis shaft bushings and screw nuts
 - A physical homing switch is installed
-- 
+
 ![homing structure](../04-docs/images/s9.png)
 
 - Rotational indicators of the tilting system click the switch to indicate positions
