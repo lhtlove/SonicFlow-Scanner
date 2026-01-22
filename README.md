@@ -199,6 +199,10 @@ Three independent modules handle different functions in the measurement pipeline
 </tr>
 </table>
 
+| ▶️ Complete Demo of Working Parts (Video) |
+|:--:|
+| [![Overall Tested](https://img.youtube.com/vi/h6HlKs1gbwU/maxresdefault.jpg)](https://youtu.be/h6HlKs1gbwU) |
+
 ---
 
 ### Design Highlights
