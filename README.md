@@ -1,303 +1,293 @@
-# SonicFlow Scanner
+# 3DC — 3D Compiler
 
-**CT-Inspired Modular Ultrasonic 3D Scanning System for Additive Manufacturing Feedback**
-
-A modular scanning system that creates 3D thermal distribution maps and performs geometry scanning using ultrasonic measurement principles adapted from computed tomography (CT). Designed to bring comprehensive environmental feedback to 3D printing—enabling a make-check-change workflow rather than blind fabrication.
-
-![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
-[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-
-> **📄 [View Comprehensive Project Overview](https://docs.google.com/document/d/1DoINSkOtGRSBR8vOlWFI2wLNMxFoE6zbKSt7RHld4zc/edit?usp=sharing)**
-> Detailed documentation covering design decisions, technical challenges, and development process.
->
-> **🔧 [View Interactive 3D Assembly](https://a360.co/4szlqWj)**
-> Explore the full system design in 3D (Autodesk Viewer)
+**CT-Inspired Ultrasonic Scanning System for Additive Manufacturing**
 
 ---
 
-## The Vision
+## Why This Exists
 
-CAD software lets you design, inspect, modify, and iterate seamlessly. You can undo operations, edit specific features, and refine continuously. 3D printing should work the same way.
+CAD software enables seamless design iteration: inspect geometry, modify features, undo operations, refine continuously. Physical fabrication lacks this capability entirely. Current 3D printers execute instructions without perceiving what they create or how environmental conditions affect the process.
 
-Current printers operate essentially blind—they execute instructions without perceiving what they've created or how the environment affects the process. This project builds the feedback infrastructure to change that: a single scanner that captures multiple volumetric environmental data types, enabling not just error detection, but eventually iterative physical editing.
+Existing feedback solutions address specific failure modes—filament jams, bed adhesion issues, layer shifts—by detecting known problem signatures. This project takes a different approach: building comprehensive environmental awareness that captures multiple volumetric data types from a single sensor system. The goal extends beyond error detection toward enabling iterative physical editing—make-check-change workflows instead of make-check-discard-remake cycles.
 
 ---
 
-## Core Innovation
+## The Core Concept
 
-### The Key Insight
+### Inverting the Ultrasonic Weakness
 
-Ultrasonic sensors have a traditional weakness: temperature sensitivity affects sound speed, degrading measurement accuracy. This project **inverts that limitation into a feature**.
+Ultrasonic sensors have a well-documented limitation: sound propagation speed depends on temperature. For precision distance measurement, this temperature dependence introduces errors when thermal conditions vary along the measurement path.
 
-By measuring time-of-flight between known positions across multiple angles, the system:
-1. Calculates average sound velocity along each measurement path
-2. Builds a sinogram from multi-angle measurements
-3. Applies inverse Radon transformation to reconstruct a **2D thermal slice**
-4. Stacks slices into a **3D thermal map**
-5. Uses the thermal map to **compensate for sound speed variations** in proximity measurements
+This project inverts that limitation into a feature.
 
-**Result:** A single, cost-effective sensor type provides both environmental awareness (thermal mapping) AND high-precision geometric measurement (calibrated proximity).
+Sound travels at different speeds depending on temperature—approximately 0.6 m/s faster per degree Celsius. Rather than treating this as an error source requiring compensation, the system measures it directly. By collecting time-of-flight data between known positions across multiple angles—the same geometric principle underlying medical CT scanning—the system reconstructs what causes those speed variations.
+
+**The reconstruction approach**: Computed tomography traditionally measures how much of a beam attenuates (as in X-ray CT). Ultrasonic CT instead measures how fast the beam travels across a known distance, directly yielding the temperature of the traversed path. With measurements collected across multiple angles on a circular scanning geometry, the data feeds into inverse Radon transformation, producing a 2D map of sound propagation speed at specific locations within that layer—equivalently, a temperature map. Stacking multiple slices produces volumetric thermal distribution.
 
 ```
-[Sensor A] ----sound wave---- [Sensor B]
-        \                    /
-         \  measured: ToF   /
-          \ known: distance/
-           → calculated: sound speed
-                  ↓
-        [Multi-angle collection]
-                  ↓
-            [Sinogram]
-                  ↓
-      [Inverse Radon Transform]
-                  ↓
-    [2D Sound Velocity = Temperature Map]
-                  ↓
-   [Calibrated Proximity Measurement]
-                  ↓
-         [3D Point Clouds]
+        ┌─────────────────────────────────────────────────────────────┐
+        │                    MEASUREMENT PHASE                        │
+        └─────────────────────────────────────────────────────────────┘
+                                    
+        [Sensor A] ─────────── sound wave ─────────── [Sensor B]
+                 \                                    /
+                  \     measured: time-of-flight     /
+                   \    known: distance             /
+                    ─────────────────────────────────
+                                  │
+                                  ▼
+                      calculated: sound speed
+                      (varies with temperature)
+                                  │
+        ┌─────────────────────────────────────────────────────────────┐
+        │                  TOMOGRAPHIC RECONSTRUCTION                 │
+        └─────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+                    ┌───────────────────────┐
+                    │  Multi-angle Collection │
+                    │  (rotate shell, repeat) │
+                    └───────────────────────┘
+                                  │
+                                  ▼
+                    ┌───────────────────────┐
+                    │       Sinogram        │
+                    │  (angle vs. position) │
+                    └───────────────────────┘
+                                  │
+                                  ▼
+                    ┌───────────────────────┐
+                    │ Inverse Radon Transform│
+                    └───────────────────────┘
+                                  │
+                                  ▼
+        ┌─────────────────────────────────────────────────────────────┐
+        │                      DUAL OUTPUT                            │
+        └─────────────────────────────────────────────────────────────┘
+                                  │
+                ┌─────────────────┴─────────────────┐
+                ▼                                   ▼
+    ┌───────────────────────┐           ┌───────────────────────┐
+    │  2D Sound Speed Map   │           │  Calibrated Proximity │
+    │         ↓             │           │     Measurement       │
+    │  2D Temperature Map   │           │                       │
+    │         ↓             │◄──────────│  (sound speed along   │
+    │  Stack → 3D Thermal   │  provides │   measurement path    │
+    │      Distribution     │  correction   known from map)    │
+    └───────────────────────┘           └───────────────────────┘
 ```
+
+### Dual-Output Architecture
+
+The critical realization was how this temperature data could calibrate proximity measurements. By comparing the computed propagation speed map against the expected path of any subsequent measurement, the system predicts speed variations along that trajectory. This eliminates errors caused by thermal gradients.
+
+A single sensor type provides two outputs:
+1. **3D Temperature Distribution**: Multi-angle ToF measurements reconstructed via inverse Radon transform
+2. **Calibrated Proximity Measurement**: Distance calculations using path-specific sound speed from the thermal map
+
+The traditional weakness of ultrasonic sensing becomes environmental awareness. Temperature sensitivity, normally a source of error, becomes a source of information.
+
+### Why Not Optical Methods?
+
+The initial interest in ultrasonic scanning came from its immunity to reflective surfaces and transparent objects—fundamental limitations of optical methods like LiDAR. These failure modes matter for 3D printing feedback where materials and surface conditions vary unpredictably.
+
+Phased arrays were eliminated early. They focus on beam control and object detection rather than pure time-of-flight measurement with the precision required for tomographic reconstruction. Mechanical positioning of high-directivity transceivers provides the measurement geometry this application demands.
 
 ---
 
 ## System Architecture
 
-### Three Core Components
-
-| Component | Description | Key Specs |
-|-----------|-------------|-----------|
-| **Motion Shell** | Ring-shaped mechanical framework | 444mm OD, continuous 360° rotation, 90° tilt capability |
-| **Carriage Module** | Compact sensor positioning unit | 46×30×77mm, 3-axis motion (linear + dual orientation) |
-| **Sensor Module** | High-frequency ultrasonic transceiver | 300kHz DDS-based, phase-accurate ToF measurement |
+Three independent modules handle different functions in the measurement pipeline. Each module has detailed documentation covering design evolution, technical specifications, and firmware architecture.
 
 ### Motion Shell
-![IMG_0400](https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9)
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/183e354e-87f1-424b-afd7-a2b4205331a9" alt="Motion Shell" width="600">
-</p>
 
-- Fully connected carriage rails with integrated gear tracks
-- Custom ENIG-plated PCB slip rings for continuous power and CAN bus during infinite rotation
-- Stepper-driven gearboxes for precise positioning
-- Designed for segmented FDM printing
-- Half-ring folding capability for module access
+The outer ring provides the mechanical framework for scanning operations.
+
+The fundamental challenge was enabling full rotation while maintaining electrical connectivity and allowing sensor access. Commercial slip rings cost hundreds of dollars and add bulk. The solution: custom ENIG-plated PCB rings with spring-loaded ball pin contacts, carrying power and CAN bus signals through continuous rotation.
+
+The design evolved through multiple iterations. The earlier version had separate rail sectors with internal motors between them. Testing revealed critical problems: module replacement required full disassembly, and the planned tilting method (rotating the entire shell) would collide with printer components.
+
+The current foldable design resolves both issues. Half the shell folds 0-90°, enabling module access when tilted, hemispherical scanning coverage when partially tilted, and standard circular scanning when flat. Modules move freely through fully connected rails with no sector divisions.
+
+**Key specifications:**
+- 444mm outer diameter
+- Continuous 360° rotation via 360:31 gear reduction
+- 0-90° tilt via 1:12 planetary gear reduction (1:3 spur × 1:1 bevel × 1:4 planetary)
+- NEMA 17 stepper motors with TMC2209 drivers
+- Dual-controller master-slave architecture per axis
+- Physical homing switch (rotation) and StallGuard sensorless homing (tilt)
+
+→ [Motion Shell Documentation](01-motion-shell/README.md)
 
 ### Carriage Module
 
-<p align="center">
-  <img src="docs/images/carriage-module-exploded.jpg" alt="Carriage Module Exploded View" width="500">
-</p>
+Compact sensor positioning units that travel along the shell's internal rail system.
 
-- NEMA8 stepper for linear rail positioning
-- Two N20 geared DC motors with magnetic encoders for dual-axis sensor orientation
-- Custom STM32F103-based controller board (44×23mm)
+CT reconstruction requires specific beam geometries—fan beam, parallel beam, etc. The 300kHz transceivers have approximately 10° directivity with steep attenuation beyond 1-2° misalignment. This demands accurate sensor orientation, not just positioning. Simply rotating the sensor module was the clear solution; the challenge was achieving rotation within extreme space constraints.
+
+Direct motor placement failed. Placing a motor beside the main stepper made the module too wide for full rotation inside the shell. Stacking motors made the shell too tall. The solution borrowed from automotive steering: two rods controlling orientation through differential length, with the angle determined by arctan(rod_extension / 8mm_spacing).
+
+The DC motors (N20 with 150:1 gearboxes and 12-CPR encoders) presented unexpected control problems. Standard PID failed because reducing PWM to slow down also reduces torque, causing stalls before reaching target position. The gears wouldn't move until sufficient torque built up, but by then it was too late to stop precisely.
+
+The solution: a three-phase algorithm (FULL_SPEED → COAST → BRAKE) that maintains near-full output while using encoder feedback to time transitions. Coasting removes the uncertainty of how driving force interacts with mechanical loads, making braking predictable. Through testing, minimum movement is 12 encoder counts, and positioning error stays within ±12 counts—less than 1° orientation error, smaller than mechanical tolerances in the 3D-printed structure.
+
+**Key specifications:**
+- 46×30×77mm envelope
+- NEMA 8 stepper for rail positioning (60:1 effective gear ratio, 32× microstepping)
+- Dual N20 DC motors for orientation control (±60° range)
+- Custom STM32F103-based controller (44×23mm)
 - Tool-free installation via slip ring contacts
-- Custom DC motor positioning algorithm (phase-based, not PID)
+- CAN bus communication at 1Mbps
+
+→ [Carriage Module Documentation](02-carriage-module/README.md)
 
 ### Sensor Module
 
-<p align="center">
-  <img src="docs/images/sensor-board.jpg" alt="Sensor Board" width="400">
-</p>
+High-frequency ultrasonic transceiver designed for phase-based ToF measurement.
 
-- 300kHz operation (research-grade frequency range)
-- AD9837 DDS for precise waveform generation
-- BJT push-pull buffer for high-voltage transducer drive
-- 4-channel TX/RX switching
-- Two-stage amplifier with Bessel filtering for waveform preservation
-- STM32G431 for signal processing
+Finding sensors meeting the requirements—individual transceiver units with high directivity, 300kHz frequency, and detection range covering the scanning zone—proved difficult. Nothing commercially available fully satisfied the conditions. Designing the driving and reception circuitry from scratch was necessary, but also advantageous: the circuit could target specific requirements rather than adapting around existing module limitations.
+
+The 300kHz operating frequency (research-grade range, not consumer sensor territory) provides ~1.1mm wavelength in air, supporting sub-millimeter resolution with phase detection. The transmit chain uses AD9837 DDS for precise waveform generation, TLE2142 for amplification, and a BJT push-pull buffer delivering ±22V to drive transducers. The receive chain routes through DG409 multiplexer to two-stage TLE2142 amplification with Bessel filtering, then OPA863 final stage to STM32G431's ADC.
+
+Bessel filter topology was chosen specifically for waveform preservation. Unlike Butterworth or Chebyshev configurations, Bessel filters maintain signal shape—essential for phase-based ToF measurement rather than simple threshold detection.
+
+**Key specifications:**
+- 28×52mm board dimensions
+- 300kHz DDS-generated waveform (AD9837, 0.1Hz resolution)
+- ±22V bipolar drive (MT3608 boost + TC7660 charge pump)
+- 4-channel TX/RX switching (DG412 TX, DG409 RX)
+- Bessel-filtered reception for waveform preservation
+- STM32G431 with 12-bit ADC up to 4 MSPS
+- CAN bus communication
+
+→ [Sensor Module Documentation](03-sensor-module/README.md)
+
+---
+
+## CAN Bus Network Architecture
+
+All modules communicate via CAN bus at 1Mbps, routed through the custom slip rings during rotation.
+
+**Device Addressing:**
+
+| Axis/Module | Master ID | Slave ID | Reports To |
+|-------------|-----------|----------|------------|
+| Rotation    | 0x200     | 0x201    | 0x700      |
+| Tilting     | 0x100     | 0x101    | 0x700      |
+| Carriage    | 0x300+n   | —        | 0x700      |
+| Sensor      | 0x400+n   | —        | 0x700      |
+
+**Protocol format:** 8-byte frames with handler-based dispatch
+```
+Byte 0: [4-bit handler ID][4-bit command]
+Bytes 1-7: Command-specific payload
+```
+
+Master-slave synchronization enables dual-motor drive for rotation and tilt axes. Masters forward commands to slaves, and both motors move together. Completion notifications propagate back to the system controller.
+
+---
+
+## Current Status
+
+### Completed
+
+- Motion shell mechanical design and full assembly
+- Foldable ring with ENIG-plated PCB slip rings validated
+- Carriage modules with full 3-axis motion control
+- DC motor positioning algorithm achieving ±12 encoder count accuracy
+- CAN bus network operating through slip ring contacts during rotation
+- Sensor board hardware with individual TX/RX validation
+- 300kHz waveform generation and amplified transducer drive
+- Waveform-preserving signal reception and ADC capture
+
+### In Progress
+
+**TX/RX Channel Switching:** The analog switch configuration for single-transducer echo mode has implementation errors preventing proper changeover between transmit and receive phases. The fix is identified but not yet implemented.
+
+**Inter-Board Timing Synchronization:** Face-to-face two-sensor ToF measurement requires sub-microsecond timing coordination between separate boards. CAN bus communication introduces latency and jitter that degrades measurement accuracy. At 343 m/s sound speed, each microsecond of timing uncertainty corresponds to ~0.34mm distance error.
+
+Potential solutions under consideration:
+- Hardware trigger line for sub-microsecond sync
+- Bidirectional measurement with averaging to cancel systematic delays
+- Timer synchronization with post-processing correction
+- Statistical averaging with outlier rejection
+
+### Planned
+
+1. **Debug TX/RX switching** for echo mode operation
+2. **Implement hardware trigger** for two-board synchronization
+3. **Validate ToF accuracy** against known distances
+4. **Integrate sensor with carriage** for positioned measurements
+5. **Implement sinogram data collection** across multiple angles
+6. **Apply inverse Radon transform** for tomographic reconstruction
+7. **Generate thermal distribution maps** and validate against known temperature distributions
+8. **Calibrated proximity measurement** using computed thermal maps
+9. **Printer firmware integration** for real-time feedback during printing
+
+---
+
+## The Ultimate Vision
+
+The furthest goal remains unchanged: not just error detection, but enabling iterative editing of physical objects.
+
+Current 3D printing treats fabrication as a one-shot process. If something goes wrong, you stop, discard, and restart. With comprehensive environmental awareness and geometric feedback, a different workflow becomes possible: detect deviations during printing, intervene at the layer level, potentially even modify or correct in-place.
+
+The mechanical infrastructure now exists. What remains is proving the sensing concept works, then building the software layer that lets a printer act on what it perceives.
+
+---
+
+## Background
+
+This project represents two years of independent development, motivated by the need for reliable 3D printing feedback in hardware work. The work spans mechanical design, custom electronics, embedded firmware, and signal processing—all developed without institutional resources, collaborators, or formal mentorship.
+
+The core concept emerged from recognizing that a traditional sensor weakness (temperature sensitivity) could be inverted into a capability through tomographic reconstruction principles borrowed from medical CT imaging. Rather than building yet another failure detector, the goal is comprehensive environmental awareness enabling iterative physical fabrication.
 
 ---
 
 ## Repository Structure
 
 ```
-SonicFlow-Scanner/
+3DC/
 ├── README.md
-├── docs/
-│   ├── images/                    # Project photos and renders
-│   ├── schematics/               # Circuit diagrams
-│   └── technical-notes/          # Design decisions and calculations
-├── hardware/
-│   ├── mechanical/
-│   │   ├── motion-shell/         # Shell CAD files (STEP, STL)
-│   │   ├── carriage-module/      # Carriage CAD files
-│   │   └── sensor-housing/       # Sensor enclosure CAD
-│   └── electronics/
-│       ├── carriage-controller/  # STM32F103 board (KiCad)
-│       ├── sensor-board/         # STM32G431 board (KiCad)
-│       └── slip-ring/            # Custom PCB slip ring design
-├── firmware/
-│   ├── carriage-controller/      # Motion control firmware
-│   ├── sensor-module/            # Ultrasonic TX/RX firmware
-│   └── shared/                   # Common libraries (CAN protocol, etc.)
-├── software/
-│   ├── reconstruction/           # Tomographic reconstruction algorithms
-│   └── host/                     # PC control interface
-└── bom/                          # Bill of materials
+├── 01-motion-shell/
+│   ├── README.md
+│   ├── hardware/
+│   │   ├── mechanical/          # CAD files (STEP, STL)
+│   │   └── electronics/         # Stepper controller PCB
+│   └── firmware/
+│       ├── CP_Rotary/           # Rotation axis firmware
+│       └── CP_Rotator/          # Tilt axis firmware
+├── 02-carriage-module/
+│   ├── README.md
+│   ├── hardware/
+│   │   ├── mechanical/          # CAD files
+│   │   └── electronics/         # Module controller PCB
+│   └── firmware/
+│       └── CC_Module/           # Carriage controller firmware
+├── 03-sensor-module/
+│   ├── README.md
+│   ├── hardware/
+│   │   └── electronics/         # Sensor board PCB
+│   └── firmware/
+│       └── SF_Sensor/           # Sensor firmware
+└── 04-docs/
+    ├── images/
+    └── references/
 ```
-
----
-
-## Technical Specifications
-
-### Motion System
-| Parameter | Value |
-|-----------|-------|
-| Shell outer diameter | 444 mm |
-| Shell rotation | Continuous 360° |
-| Tilt range | 0-90° |
-| Carriage linear travel | Full circumference |
-| Sensor orientation | ±45° (each axis) |
-| Communication | CAN bus (through slip ring) |
-
-### Ultrasonic System
-| Parameter | Value |
-|-----------|-------|
-| Operating frequency | 300 kHz |
-| Waveform generation | DDS (AD9837) |
-| ToF measurement | Phase-based |
-| Theoretical precision | ~100 μm (with thermal compensation) |
-| TX channels | 4 (switchable) |
-| RX channels | 4 (switchable) |
-
-### Controller Boards
-| Board | MCU | Dimensions |
-|-------|-----|------------|
-| Carriage Controller | STM32F103 | 44×23 mm |
-| Sensor Board | STM32G431 | 28×52 mm |
-
----
-
-## Current Status
-
-### ✅ Completed
-- Motion shell mechanical design and assembly
-- Carriage module with full motion control
-- CAN bus network integration across slip rings
-- Sensor board hardware design
-- Individual TX and RX validation
-
-### 🔄 In Progress
-- Sensor interface integration debugging
-- TX/RX switching circuit validation
-- ToF measurement accuracy verification
-
-### 📋 Planned
-- Tomographic reconstruction pipeline implementation
-- Thermal compensation validation
-- Printer firmware integration
-- Multi-slice 3D scanning demonstration
-
----
-
-## Key Technical Challenges Solved
-
-### 1. DC Motor Precision Positioning
-Standard PID control failed—reducing PWM to slow down also reduces torque, causing stalls. Developed a **phase-based algorithm** that maintains near-full output while using encoder feedback to time deceleration.
-
-### 2. Custom PCB Slip Rings
-Commercial slip rings cost hundreds of dollars. Created ENIG-plated PCB rings with spring-loaded ball pin contacts. Key challenge: finding optimal contact pressure (too light = dropout, too heavy = gold wear-through).
-
-### 3. High-Frequency Signal Integrity
-300kHz ultrasonic reception requires capturing microvolt signals while high-voltage TX signals share the same board. Multiple filter iterations before Bessel configuration achieved clean signal capture.
-
-### 4. Compact Mechatronics
-Fitting three motors, encoders, and control electronics into a 46×30×77mm envelope while maintaining assembly access and thermal management.
-
----
-
-## Building This Project
-
-### Prerequisites
-- FDM 3D printer (250mm+ build volume recommended)
-- PCB fabrication (JLCPCB, PCBWay, etc.)
-- Basic SMD soldering equipment
-- ST-Link programmer
-
-### Hardware
-See `/bom` for complete bill of materials.
-
-### Firmware
-```bash
-# Clone repository
-git clone https://github.com/lhtlove/SonicFlow-Scanner.git
-cd SonicFlow-Scanner
-
-# Build carriage controller firmware
-cd firmware/carriage-controller
-make
-
-# Build sensor module firmware
-cd ../sensor-module
-make
-```
-
----
-
-## Documentation
-
-- [Motion Shell Assembly Guide](docs/assembly-motion-shell.md)
-- [Carriage Module Assembly Guide](docs/assembly-carriage.md)
-- [Electronics Build Guide](docs/electronics-build.md)
-- [Firmware Flashing Guide](docs/firmware-flashing.md)
-- [CAN Protocol Reference](docs/can-protocol.md)
-- [Reconstruction Algorithm Notes](docs/reconstruction-theory.md)
-
----
-
-## Media
-
-### Project Photos
-See the `/docs/images` directory for:
-- Build progress photos
-- Assembly documentation
-- Test setup images
-- Oscilloscope captures
-
-### Videos
-- [Motion Shell Rotation Demo](link)
-- [Carriage Module Movement Test](link)
-- [System Integration Test](link)
-
----
-
-## Background
-
-This project represents two years of independent development as a high school student, motivated by the need for reliable 3D printing feedback in hardware projects. The work spans mechanical design, electronics, firmware, and signal processing—all developed without institutional resources or formal mentorship.
-
-The core concept emerged from recognizing that a traditional sensor weakness (temperature sensitivity) could be inverted into a capability through tomographic reconstruction principles borrowed from medical CT imaging.
 
 ---
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License** (CC BY-NC-ND 4.0).
+**Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International** (CC BY-NC-ND 4.0)
 
-**What this means:**
-- ✅ **You CAN:** Share and redistribute this project with proper attribution
-- ❌ **You CANNOT:** Use this project or its designs for commercial purposes
-- ❌ **You CANNOT:** Create modified or derivative versions for distribution
-
-This license protects the 3D models, hardware designs, and other creative works from commercial exploitation while allowing the community to learn from and reference the work.
-
-See the [LICENSE](LICENSE) file for full legal details.
-
----
-
-## Acknowledgments
-
-- Computed tomography principles that inspired the measurement approach
-- The open-source 3D printing community
-- Online resources for STM32 development and CAN bus implementation
+- Share and redistribute with proper attribution
+- No commercial use
+- No modified or derivative versions for distribution
 
 ---
 
 ## Contact
 
-**Huitak Lee**
-- GitHub: [@lhtlove](https://github.com/lhtlove)
-
----
-
-*This project is part of my maker portfolio submission. For questions about the technical implementation or collaboration opportunities, please open an issue or reach out directly.*
+**Huitak Lee**  
+GitHub: [@lhtlove](https://github.com/lhtlove)
