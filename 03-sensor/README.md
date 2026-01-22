@@ -42,6 +42,10 @@ Integration debugging remains in progress. Two issues currently prevent full sca
 
 The core sensing concept—transmit, receive, preserve waveform, analyze for precise timing—functions correctly. What remains is resolving the integration issues that prevent the complete scanning workflow.
 
+| Sensor Module Tested (Video) |
+|:--:|
+| [![Sensor Module Tested](https://img.youtube.com/vi/-jPF8-3BQyM/maxresdefault.jpg)](https://youtu.be/-jPF8-3BQyM) |
+
 ---
 
 ## Technical Specifications
