@@ -44,10 +44,10 @@ Sound travels at different speeds depending on temperature—approximately 0.6 m
         └─────────────────────────────────────────────────────────────┘
                                   │
                                   ▼
-                    ┌───────────────────────┐
+                    ┌─────────────────────────┐
                     │  Multi-angle Collection │
                     │  (rotate shell, repeat) │
-                    └───────────────────────┘
+                    └─────────────────────────┘
                                   │
                                   ▼
                     ┌───────────────────────┐
@@ -56,9 +56,9 @@ Sound travels at different speeds depending on temperature—approximately 0.6 m
                     └───────────────────────┘
                                   │
                                   ▼
-                    ┌───────────────────────┐
+                    ┌────────────────────────┐
                     │ Inverse Radon Transform│
-                    └───────────────────────┘
+                    └────────────────────────┘
                                   │
                                   ▼
         ┌─────────────────────────────────────────────────────────────┐
@@ -72,8 +72,8 @@ Sound travels at different speeds depending on temperature—approximately 0.6 m
     │         ↓             │           │     Measurement       │
     │  2D Temperature Map   │           │                       │
     │         ↓             │◄──────────│  (sound speed along   │
-    │  Stack → 3D Thermal   │  provides │   measurement path    │
-    │      Distribution     │  correction   known from map)    │
+    │  Stack → 3D Thermal   │ provides  │   measurement path    │
+    │      Distribution     │ correction│   known from map)     │
     └───────────────────────┘           └───────────────────────┘
 ```
 
@@ -104,12 +104,12 @@ Three independent modules handle different functions in the measurement pipeline
 │                              SYSTEM OVERVIEW                                 │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│    ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐    │
-│    │  MOTION SHELL   │      │ CARRIAGE MODULE │      │  SENSOR MODULE  │    │
-│    │                 │      │                 │      │                 │    │
-│    │  Ring framework │ ───► │ Sensor positioning ─► │  Ultrasonic ToF │    │
-│    │  + rotation     │      │ along rail      │      │  measurement    │    │
-│    └─────────────────┘      └─────────────────┘      └─────────────────┘    │
+│    ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐     │
+│    │  MOTION SHELL   │      │ CARRIAGE MODULE │      │  SENSOR MODULE  │     │
+│    │                 │      │                 │      │                 │     │
+│    │  Ring framework │ ───► │ Sensor positioning ─►  │  Ultrasonic ToF │     │
+│    │  + rotation     │      │ along rail      │      │  measurement    │     │
+│    └─────────────────┘      └─────────────────┘      └─────────────────┘     │
 │                                                                              │
 │                         ▼ CAN Bus @ 1Mbps ▼                                  │
 │              (through custom ENIG-plated PCB slip rings)                     │
@@ -185,7 +185,7 @@ Three independent modules handle different functions in the measurement pipeline
 | MCU | STM32G431 |
 
 **Key innovations:**
-- Research-grade frequency for ~1.1mm wavelength resolution
+- Research-grade frequency for sub-millimeter measurement resolution
 - Bessel filter topology preserving waveform shape for phase-based ToF
 - Custom TX/RX signal chains
 
