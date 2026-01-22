@@ -140,6 +140,10 @@ Though the components seem cheap and hobby-level, I reached the intended capabil
 
 But at least, it became suitable to perform the measurements I wanted.
 
+<video width="600" controls>
+  <source src="../04-docs/videos/mtest.mp4" type="video/mp4">
+</video>
+
 ---
 
 ## Technical Specifications
