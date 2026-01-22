@@ -191,7 +191,7 @@ Three independent modules handle different functions in the measurement pipeline
 
 <br>
 
-> **[📖 Full Documentation →](03-sensor-module/README.md)**
+> **[📖 Full Documentation →](03-sensor/README.md)**
 > 
 > *Signal chain design, DDS waveform generation, filter selection*
 
