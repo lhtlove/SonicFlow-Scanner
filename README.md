@@ -12,6 +12,17 @@ Existing feedback solutions address specific failure modes—filament jams, bed 
 
 ---
 
+![Project Status](https://img.shields.io/badge/status-in%20development-yellow)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+> **📄 [View Comprehensive Project Overview](https://docs.google.com/document/d/1DoINSkOtGRSBR8vOlWFI2wLNMxFoE6zbKSt7RHld4zc/edit?usp=sharing)**
+> Detailed documentation covering design decisions, technical challenges, and development process.
+>
+> **🔧 [View Interactive 3D Assembly](https://a360.co/4szlqWj)**
+> Explore the full system design in 3D (Autodesk Viewer)
+
+---
+
 ## The Core Concept
 
 ### Inverting the Ultrasonic Weakness
