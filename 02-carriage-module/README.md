@@ -140,7 +140,7 @@ Though the components seem cheap and hobby-level, I reached the intended capabil
 
 But at least, it became suitable to perform the measurements I wanted.
 
-| Carriage Module Tested (Video) |
+| ▶️ Carriage Module Tested (Video) |
 |:--:|
 | [![Carriage Module Tested](https://img.youtube.com/vi/oqsR4Djrq-M/maxresdefault.jpg)](https://youtu.be/oqsR4Djrq-M) |
 
