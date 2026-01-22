@@ -97,70 +97,119 @@ Phased arrays were eliminated early. They focus on beam control and object detec
 
 ## System Architecture
 
-Three independent modules handle different functions in the measurement pipeline. Each module has detailed documentation covering design evolution, technical specifications, and firmware architecture.
+Three independent modules handle different functions in the measurement pipeline.
 
-### Motion Shell
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                              SYSTEM OVERVIEW                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│    ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐    │
+│    │  MOTION SHELL   │      │ CARRIAGE MODULE │      │  SENSOR MODULE  │    │
+│    │                 │      │                 │      │                 │    │
+│    │  Ring framework │ ───► │ Sensor positioning ─► │  Ultrasonic ToF │    │
+│    │  + rotation     │      │ along rail      │      │  measurement    │    │
+│    └─────────────────┘      └─────────────────┘      └─────────────────┘    │
+│                                                                              │
+│                         ▼ CAN Bus @ 1Mbps ▼                                  │
+│              (through custom ENIG-plated PCB slip rings)                     │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
 
-The outer ring provides the mechanical framework for scanning operations.
+---
 
-The fundamental challenge was enabling full rotation while maintaining electrical connectivity and allowing sensor access. Commercial slip rings cost hundreds of dollars and add bulk. The solution: custom ENIG-plated PCB rings with spring-loaded ball pin contacts, carrying power and CAN bus signals through continuous rotation.
+<table>
+<tr>
+<td width="33%" valign="top">
 
-The design evolved through multiple iterations. The earlier version had separate rail sectors with internal motors between them. Testing revealed critical problems: module replacement required full disassembly, and the planned tilting method (rotating the entire shell) would collide with printer components.
+### 📐 Motion Shell
 
-The current foldable design resolves both issues. Half the shell folds 0-90°, enabling module access when tilted, hemispherical scanning coverage when partially tilted, and standard circular scanning when flat. Modules move freely through fully connected rails with no sector divisions.
+**Ring-shaped mechanical framework**
 
-**Key specifications:**
-- 444mm outer diameter
-- Continuous 360° rotation via 360:31 gear reduction
-- 0-90° tilt via 1:12 planetary gear reduction (1:3 spur × 1:1 bevel × 1:4 planetary)
-- NEMA 17 stepper motors with TMC2209 drivers
-- Dual-controller master-slave architecture per axis
-- Physical homing switch (rotation) and StallGuard sensorless homing (tilt)
+| | |
+|---|---|
+| Diameter | 444mm |
+| Rotation | 360° continuous |
+| Tilt | 0-90° foldable |
+| Motors | NEMA 17 + TMC2209 |
 
-→ [Motion Shell Documentation](01-motion-shell/README.md)
+**Key innovations:**
+- Custom PCB slip rings (ENIG-plated) for power + CAN through infinite rotation
+- Foldable design for module access and hemispherical scanning
+- Dual-controller master-slave architecture
 
-### Carriage Module
+<br>
 
-Compact sensor positioning units that travel along the shell's internal rail system.
+> **[📖 Full Documentation →](01-motion-shell/README.md)**
+> 
+> *Design evolution, slip ring development, gear systems, firmware architecture*
 
-CT reconstruction requires specific beam geometries—fan beam, parallel beam, etc. The 300kHz transceivers have approximately 10° directivity with steep attenuation beyond 1-2° misalignment. This demands accurate sensor orientation, not just positioning. Simply rotating the sensor module was the clear solution; the challenge was achieving rotation within extreme space constraints.
+</td>
+<td width="33%" valign="top">
 
-Direct motor placement failed. Placing a motor beside the main stepper made the module too wide for full rotation inside the shell. Stacking motors made the shell too tall. The solution borrowed from automotive steering: two rods controlling orientation through differential length, with the angle determined by arctan(rod_extension / 8mm_spacing).
+### ⚙️ Carriage Module
 
-The DC motors (N20 with 150:1 gearboxes and 12-CPR encoders) presented unexpected control problems. Standard PID failed because reducing PWM to slow down also reduces torque, causing stalls before reaching target position. The gears wouldn't move until sufficient torque built up, but by then it was too late to stop precisely.
+**Compact 3-axis sensor positioning**
 
-The solution: a three-phase algorithm (FULL_SPEED → COAST → BRAKE) that maintains near-full output while using encoder feedback to time transitions. Coasting removes the uncertainty of how driving force interacts with mechanical loads, making braking predictable. Through testing, minimum movement is 12 encoder counts, and positioning error stays within ±12 counts—less than 1° orientation error, smaller than mechanical tolerances in the 3D-printed structure.
+| | |
+|---|---|
+| Size | 46×30×77mm |
+| Linear | NEMA 8 stepper |
+| Orientation | ±60° dual-axis |
+| Controller | STM32F103 |
 
-**Key specifications:**
-- 46×30×77mm envelope
-- NEMA 8 stepper for rail positioning (60:1 effective gear ratio, 32× microstepping)
-- Dual N20 DC motors for orientation control (±60° range)
-- Custom STM32F103-based controller (44×23mm)
-- Tool-free installation via slip ring contacts
-- CAN bus communication at 1Mbps
+**Key innovations:**
+- Automotive-inspired rod mechanism for orientation control
+- Custom DC motor algorithm (FULL_SPEED→COAST→BRAKE) replacing failed PID
+- ±12 count accuracy with hobby-grade components
 
-→ [Carriage Module Documentation](02-carriage-module/README.md)
+<br>
 
-### Sensor Module
+> **[📖 Full Documentation →](02-carriage-module/README.md)**
+> 
+> *DC motor control problem, rod mechanism, hardware iterations*
 
-High-frequency ultrasonic transceiver designed for phase-based ToF measurement.
+</td>
+<td width="33%" valign="top">
 
-Finding sensors meeting the requirements—individual transceiver units with high directivity, 300kHz frequency, and detection range covering the scanning zone—proved difficult. Nothing commercially available fully satisfied the conditions. Designing the driving and reception circuitry from scratch was necessary, but also advantageous: the circuit could target specific requirements rather than adapting around existing module limitations.
+### 📡 Sensor Module
 
-The 300kHz operating frequency (research-grade range, not consumer sensor territory) provides ~1.1mm wavelength in air, supporting sub-millimeter resolution with phase detection. The transmit chain uses AD9837 DDS for precise waveform generation, TLE2142 for amplification, and a BJT push-pull buffer delivering ±22V to drive transducers. The receive chain routes through DG409 multiplexer to two-stage TLE2142 amplification with Bessel filtering, then OPA863 final stage to STM32G431's ADC.
+**300kHz ultrasonic transceiver**
 
-Bessel filter topology was chosen specifically for waveform preservation. Unlike Butterworth or Chebyshev configurations, Bessel filters maintain signal shape—essential for phase-based ToF measurement rather than simple threshold detection.
+| | |
+|---|---|
+| Frequency | 300kHz DDS |
+| Drive | ±22V bipolar |
+| Channels | 4 TX / 4 RX |
+| MCU | STM32G431 |
 
-**Key specifications:**
-- 28×52mm board dimensions
-- 300kHz DDS-generated waveform (AD9837, 0.1Hz resolution)
-- ±22V bipolar drive (MT3608 boost + TC7660 charge pump)
-- 4-channel TX/RX switching (DG412 TX, DG409 RX)
-- Bessel-filtered reception for waveform preservation
-- STM32G431 with 12-bit ADC up to 4 MSPS
-- CAN bus communication
+**Key innovations:**
+- Research-grade frequency for ~1.1mm wavelength resolution
+- Bessel filter topology preserving waveform shape for phase-based ToF
+- Custom TX/RX signal chains
 
-→ [Sensor Module Documentation](03-sensor-module/README.md)
+<br>
+
+> **[📖 Full Documentation →](03-sensor-module/README.md)**
+> 
+> *Signal chain design, DDS waveform generation, filter selection*
+
+</td>
+</tr>
+</table>
+
+---
+
+### Design Highlights
+
+Each module documentation covers full design evolution. Here's what makes each interesting:
+
+**Motion Shell** — The fundamental challenge was enabling full rotation while maintaining electrical connectivity. Commercial slip rings cost hundreds of dollars. Custom PCB slip rings with ENIG plating and spring-loaded ball contacts solved both cost and bulk—but finding the right contact pressure required extensive iteration: too light and connections drop out, too heavy and the gold plating wears through.
+
+**Carriage Module** — Standard PID control failed completely for DC motor positioning. Reducing PWM to slow down also reduces torque, causing stalls before reaching target. The solution was a three-phase algorithm that maintains near-full torque while using encoder feedback to time the transition to coasting, then braking. Coasting removes the uncertainty of how driving force interacts with mechanical loads.
+
+**Sensor Module** — The 300kHz operating frequency (research-grade, not consumer sensor territory) provides sub-millimeter resolution potential. Bessel filter topology was chosen specifically because unlike Butterworth or Chebyshev configurations, Bessel filters maintain signal shape—essential for phase-based ToF measurement rather than simple threshold detection.
 
 ---
 
